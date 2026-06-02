@@ -1,9 +1,7 @@
 "use client";
-
 import { motion } from "framer-motion";
-import HeroSection from "@/components/Home/HeroSection";
 
-export default function Home() {
+export default function Store() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -11,7 +9,7 @@ export default function Home() {
       exit={{ opacity: 0 }}
       transition={{ duration: 1 }}
     >
-      <HeroSection />
+      Store
     </motion.div>
   );
 }
