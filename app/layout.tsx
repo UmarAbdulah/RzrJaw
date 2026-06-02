@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import SplashScreen from "@/components/SplashScreen";
+import Footer from "@/components/Home/Footer";
 
 // have to optimize it later for seo purrposes
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
         <SplashScreen />
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

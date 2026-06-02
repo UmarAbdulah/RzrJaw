@@ -6,7 +6,7 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <section
-      className="relative w-full h-screen flex items-center justify-center"
+      className="relative w-full h-[70vh] flex items-center justify-center "
       style={{
         backgroundImage: "url('/hero-bg.jpg')",
         backgroundSize: "cover",
@@ -35,7 +35,7 @@ const HeroSection = () => {
           hard gum.
         </p>
         <Link href="/store">
-          <button className="bg-[#2dd4c8] text-[#1f1f1f] font-bold tracking-widest uppercase px-10 py-5 text-sm hover:bg-[#a6f8ea] transition-colors duration-300">
+          <button className="bg-[#2dd4c8] text-[#1f1f1f] font-bold tracking-widest uppercase px-10 py-5 text-sm hover:bg-[#a6f8ea] hover:cursor-pointer transition-all duration-500 ease-in-out hover:scale-105">
             Order Yours Today
           </button>
         </Link>
