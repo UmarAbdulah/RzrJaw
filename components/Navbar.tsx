@@ -36,7 +36,7 @@ const Navbar = () => {
         <Tab to="/store" setPosition={setPosition}>
           Store
         </Tab>
-        <Tab setPosition={setPosition}>
+        <Tab to="/cart" setPosition={setPosition}>
           <CartIcon />
         </Tab>
         <Cursor position={position} />
