@@ -9,23 +9,33 @@ import Picture from "@/components/Home/Picture";
 import HowToTrain from "@/components/Home/HowToTrain ";
 import UpgradePro from "@/components/Home/UpgradePro";
 import FAQSection from "@/components/Home/FAQSection";
+import FadeIn from "@/components/FadeIn";
 
 export default function Home() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1 }}
-    >
+    <main>
       <HeroSection />
-      <FlavourSection />
-      <Banner />
-      <AlwaysAtGym />
-      <Picture />
-      <HowToTrain />
-      <UpgradePro />
-      <FAQSection />
-    </motion.div>
+      <FadeIn>
+        <FlavourSection />
+      </FadeIn>
+      <FadeIn>
+        <Banner />
+      </FadeIn>
+      <FadeIn>
+        <AlwaysAtGym />
+      </FadeIn>
+      <FadeIn>
+        <Picture />
+      </FadeIn>
+      <FadeIn>
+        <HowToTrain />
+      </FadeIn>
+      <FadeIn>
+        <UpgradePro />
+      </FadeIn>
+      <FadeIn>
+        <FAQSection />
+      </FadeIn>
+    </main>
   );
 }

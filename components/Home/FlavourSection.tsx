@@ -18,7 +18,7 @@ const FlavourSection = () => {
         {products.map((product) => (
           <div
             key={product.id}
-            className="relative bg-[#242424] border border-[#2f2f2f] p-6 flex flex-col"
+            className="group relative bg-[#242424] border border-[#2f2f2f] hover:border-[#2dd4c8] hover:shadow-[0_0_30px_rgba(45,212,200,0.3)] p-6 flex flex-col transition-all duration-500"
           >
             {/* Sale badge */}
             <span className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-bold px-3 py-1 uppercase z-10">
@@ -26,12 +26,12 @@ const FlavourSection = () => {
             </span>
 
             {/* Image */}
-            <div className="relative w-full aspect-square mb-6">
+            <div className="relative w-full aspect-square mb-6 overflow-hidden">
               <Image
                 src={product.image}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
               />
             </div>
 

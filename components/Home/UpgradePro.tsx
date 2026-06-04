@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const UpgradePro = () => {
   return (
@@ -7,6 +10,40 @@ const UpgradePro = () => {
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         {/* Left — Image */}
         <div className="relative w-full aspect-square">
+          {/* Animated corner — bottom left */}
+          <motion.div
+            className="absolute bottom-0 left-0 h-[2px] bg-[#2dd4c8] z-10"
+            animate={{ width: ["0px", "100px", "0px"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-0 left-0 w-[2px] bg-[#2dd4c8] z-10"
+            animate={{ height: ["0px", "100px", "0px"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Animated corner — top right */}
+          <motion.div
+            className="absolute top-0 right-0 h-[2px] bg-[#2dd4c8] z-10"
+            animate={{ width: ["0px", "100px", "0px"] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+          <motion.div
+            className="absolute top-0 right-0 w-[2px] bg-[#2dd4c8] z-10"
+            animate={{ height: ["0px", "100px", "0px"] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+
           <Image
             src="/pro-product.webp"
             alt="RZRJAW Pro Mango"
