@@ -77,7 +77,7 @@ const AlwaysAtGym = () => {
         {/* Right Image */}
         <div className="w-full aspect-square bg-[#242424] border border-[#2f2f2f] relative">
           <Image
-            src="/gym-section.png"
+            src="/gym-section.webp"
             alt="Always at the gym"
             fill
             className="object-cover"
