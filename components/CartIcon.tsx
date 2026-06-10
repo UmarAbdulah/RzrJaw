@@ -1,18 +1,22 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const CartIcon = () => {
   const { totalItems } = useCart();
   const [blink, setBlink] = useState(false);
-  const prevTotal = useRef(totalItems);
+  const isFirstRender = useRef(true);
 
-  if (prevTotal.current !== totalItems) {
-    prevTotal.current = totalItems;
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setBlink(true);
-    setTimeout(() => setBlink(false), 600);
-  }
+    const timer = setTimeout(() => setBlink(false), 600);
+    return () => clearTimeout(timer);
+  }, [totalItems]);
 
   return (
     <div className="relative">

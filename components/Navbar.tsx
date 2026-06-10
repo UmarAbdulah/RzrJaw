@@ -16,7 +16,7 @@ const Navbar = () => {
   });
 
   return (
-    <div className="mt-3 absolute z-999 w-full flex justify-center">
+    <div className="mt-3 fixed z-999 w-full flex justify-center">
       <ul
         onClick={() => setPosition((prev) => ({ ...prev, opacity: 1 }))}
         onMouseLeave={() => setPosition({ left: 0, width: 0, opacity: 0 })}
