@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import SplashScreen from "@/components/SplashScreen";
 import Footer from "@/components/Home/Footer";
+import { CartProvider } from "@/context/CartContext";
 
 // have to optimize it later for seo purrposes
 export const metadata: Metadata = {
@@ -20,10 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <SplashScreen />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <CartProvider>
+          <SplashScreen />
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

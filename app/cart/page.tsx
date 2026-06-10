@@ -1,52 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
-import { CartItem } from "@/types/cart";
 
-const initialItems: CartItem[] = [
-  {
-    id: 1,
-    image: "/mint.png",
-    name: "RZRJAW MINT",
-    subtitle: "30 Gums • Hard",
-    price: 24.99,
-    quantity: 1,
-  },
-  {
-    id: 2,
-    image: "/mango.png",
-    name: "JAWLINE CHEWING GUM MANGO",
-    subtitle: "30 Gums • Ultra Hard",
-    badge: "PRO",
-    price: 29.99,
-    quantity: 1,
-  },
-];
+const parsePrice = (price: string): number => {
+  return parseFloat(price.replace("Rs.", "").replace(/,/g, "").trim());
+};
 
 export default function CartPage() {
-  const [items, setItems] = useState<CartItem[]>(initialItems);
-
-  const updateQuantity = (id: number, delta: number) => {
-    setItems((prev) =>
-      prev
-        .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + delta } : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
-
-  const removeItem = (id: number) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const total = subtotal;
+  const { items, removeFromCart, updateQuantity, subtotal } = useCart();
 
   return (
     <main className="w-full min-h-screen bg-[#1f1f1f] pt-24 pb-16 px-6">
@@ -78,14 +41,14 @@ export default function CartPage() {
             ) : (
               items.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.product.id}
                   className="flex items-center gap-4 bg-[#1a1a1a] border border-[#2f2f2f] p-4"
                 >
                   {/* Image */}
                   <div className="relative w-20 h-20 shrink-0">
                     <Image
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.image}
+                      alt={item.product.name}
                       fill
                       className="object-cover"
                     />
@@ -95,22 +58,22 @@ export default function CartPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="text-white font-bold text-sm uppercase">
-                        {item.name}
+                        {item.product.name}
                       </h3>
-                      {item.badge && (
+                      {item.product.badge && (
                         <span className="bg-yellow-400 text-black text-[9px] font-bold px-2 py-0.5 uppercase">
-                          {item.badge}
+                          {item.product.badge}
                         </span>
                       )}
                     </div>
                     <p className="text-gray-500 text-xs mt-1">
-                      {item.subtitle}
+                      {item.product.subtitle}
                     </p>
 
                     {/* Quantity */}
                     <div className="flex items-center gap-3 mt-3">
                       <button
-                        onClick={() => updateQuantity(item.id, -1)}
+                        onClick={() => updateQuantity(item.product.id, -1)}
                         className="w-7 h-7 border border-[#2f2f2f] text-white text-sm hover:border-[#2dd4c8] hover:text-[#2dd4c8] transition-all duration-300"
                       >
                         −
@@ -119,7 +82,7 @@ export default function CartPage() {
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => updateQuantity(item.id, 1)}
+                        onClick={() => updateQuantity(item.product.id, 1)}
                         className="w-7 h-7 border border-[#2f2f2f] text-white text-sm hover:border-[#2dd4c8] hover:text-[#2dd4c8] transition-all duration-300"
                       >
                         +
@@ -130,7 +93,7 @@ export default function CartPage() {
                   {/* Price + Delete */}
                   <div className="flex flex-col items-end gap-4">
                     <button
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeFromCart(item.product.id)}
                       className="text-gray-500 hover:text-red-400 transition-colors duration-300"
                     >
                       <svg
@@ -149,7 +112,10 @@ export default function CartPage() {
                       </svg>
                     </button>
                     <span className="text-[#2dd4c8] font-bold text-sm">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      Rs.{" "}
+                      {(
+                        parsePrice(item.product.price) * item.quantity
+                      ).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -168,7 +134,9 @@ export default function CartPage() {
                 <span className="text-gray-400">
                   Subtotal ({items.length} items)
                 </span>
-                <span className="text-white">${subtotal.toFixed(2)}</span>
+                <span className="text-white">
+                  Rs. {subtotal.toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Shipping</span>
@@ -176,7 +144,7 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Taxes</span>
-                <span className="text-white">$0.00</span>
+                <span className="text-white">Rs. 0</span>
               </div>
             </div>
 
@@ -185,13 +153,15 @@ export default function CartPage() {
                 Total
               </span>
               <span className="text-[#2dd4c8] font-black text-xl">
-                ${total.toFixed(2)}
+                Rs. {subtotal.toLocaleString()}
               </span>
             </div>
 
-            <button className="w-full bg-[#2dd4c8] text-[#1f1f1f] font-bold tracking-widest uppercase text-xs py-4 hover:bg-[#a6f8ea] transition-all duration-300 flex items-center justify-center gap-2">
-              Proceed to Checkout →
-            </button>
+            <Link href="/checkout">
+              <button className="w-full bg-[#2dd4c8] text-[#1f1f1f] font-bold tracking-widest uppercase text-xs py-4 hover:bg-[#a6f8ea] transition-all duration-300">
+                Proceed to Checkout →
+              </button>
+            </Link>
 
             <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
               <svg

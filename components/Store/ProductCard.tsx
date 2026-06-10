@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Product } from "@/types/products";
+import { useCart } from "@/context/CartContext";
 
 const ProductCard = ({
   product,
@@ -15,6 +16,7 @@ const ProductCard = ({
 }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-50px" });
+  const { addToCart } = useCart();
 
   return (
     <motion.div
@@ -66,7 +68,10 @@ const ProductCard = ({
         </div>
 
         {/* Button */}
-        <button className="mt-3 w-full text-xs font-bold tracking-widest uppercase py-3 transition-all duration-300 border border-[#2dd4c8] text-[#2dd4c8] hover:bg-[#2dd4c8] hover:text-[#1f1f1f]">
+        <button
+          onClick={() => addToCart(product)}
+          className="mt-3 w-full text-xs font-bold tracking-widest uppercase py-3 transition-all duration-300 border border-[#2dd4c8] text-[#2dd4c8] hover:bg-[#2dd4c8] hover:text-[#1f1f1f]"
+        >
           ADD TO CART
         </button>
       </div>
