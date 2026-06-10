@@ -3,6 +3,7 @@
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const parsePrice = (price: string): number => {
   return parseFloat(price.replace("Rs.", "").replace(/,/g, "").trim());
@@ -12,89 +13,123 @@ export default function CartPage() {
   const { items, removeFromCart, updateQuantity, subtotal } = useCart();
 
   return (
-    <main className="w-full min-h-screen bg-[#1f1f1f] pt-24 pb-16 px-6">
-      <div className="max-w-5xl mx-auto">
+    <main className="w-full min-h-screen bg-[#1f1f1f] pt-28 pb-16 px-6">
+      <div className="max-w-6xl mx-auto">
         {/* Heading */}
-        <div className="mb-8">
-          <h1 className="text-white font-black uppercase text-4xl tracking-tight">
+        <div className="mb-10 border-b border-[#2f2f2f] pb-6">
+          <h1 className="text-white font-black uppercase text-5xl tracking-tight">
             Your Cart
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-500 text-sm mt-2">
             Review your items before proceeding to checkout.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Left — Cart Items */}
-          <div className="md:col-span-2 flex flex-col gap-4">
-            {items.length === 0 ? (
-              <div className="border border-[#2f2f2f] p-10 text-center">
-                <p className="text-gray-400 text-sm mb-4">
-                  Your cart is empty.
-                </p>
-                <Link href="/store">
-                  <button className="border border-[#2dd4c8] text-[#2dd4c8] text-xs font-bold tracking-widest uppercase px-8 py-3 hover:bg-[#2dd4c8] hover:text-[#1f1f1f] transition-all duration-300">
-                    Shop Now
-                  </button>
-                </Link>
+        {items.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1}
+              stroke="#2f2f2f"
+              className="w-24 h-24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h11a1 1 0 001-.9l.7-4.1M7 13H5.4M16 17a2 2 0 11-4 0 2 2 0 014 0zm-6 0a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <p className="text-gray-500 text-sm uppercase tracking-widest">
+              Your cart is empty
+            </p>
+            <Link href="/store">
+              <button className="border border-[#2dd4c8] text-[#2dd4c8] text-xs font-bold tracking-widest uppercase px-10 py-4 hover:bg-[#2dd4c8] hover:text-[#1f1f1f] transition-all duration-300">
+                Shop Now
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left — Cart Items */}
+            <div className="lg:col-span-2 flex flex-col gap-4">
+              {/* Column headers */}
+              <div className="hidden md:grid grid-cols-12 text-gray-500 text-xs uppercase tracking-widest pb-2 border-b border-[#2f2f2f]">
+                <span className="col-span-6">Product</span>
+                <span className="col-span-3 text-center">Quantity</span>
+                <span className="col-span-3 text-right">Total</span>
               </div>
-            ) : (
-              items.map((item) => (
-                <div
+
+              {items.map((item, index) => (
+                <motion.div
                   key={item.product.id}
-                  className="flex items-center gap-4 bg-[#1a1a1a] border border-[#2f2f2f] p-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="grid grid-cols-12 items-center gap-4 bg-[#1a1a1a] border border-[#2f2f2f] hover:border-[#2dd4c8]/40 p-4 transition-all duration-300"
                 >
-                  {/* Image */}
-                  <div className="relative w-20 h-20 shrink-0">
-                    <Image
-                      src={item.product.image}
-                      alt={item.product.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-white font-bold text-sm uppercase">
-                        {item.product.name}
-                      </h3>
-                      {item.product.badge && (
-                        <span className="bg-yellow-400 text-black text-[9px] font-bold px-2 py-0.5 uppercase">
-                          {item.product.badge}
-                        </span>
-                      )}
+                  {/* Product — col 6 */}
+                  <div className="col-span-12 md:col-span-6 flex items-center gap-4">
+                    <div className="relative w-20 h-20 shrink-0 border border-[#2f2f2f]">
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.name}
+                        fill
+                        className="object-cover"
+                      />
                     </div>
-                    <p className="text-gray-500 text-xs mt-1">
-                      {item.product.subtitle}
-                    </p>
-
-                    {/* Quantity */}
-                    <div className="flex items-center gap-3 mt-3">
-                      <button
-                        onClick={() => updateQuantity(item.product.id, -1)}
-                        className="w-7 h-7 border border-[#2f2f2f] text-white text-sm hover:border-[#2dd4c8] hover:text-[#2dd4c8] transition-all duration-300"
-                      >
-                        −
-                      </button>
-                      <span className="text-white text-sm">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.product.id, 1)}
-                        className="w-7 h-7 border border-[#2f2f2f] text-white text-sm hover:border-[#2dd4c8] hover:text-[#2dd4c8] transition-all duration-300"
-                      >
-                        +
-                      </button>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-white font-bold text-sm uppercase">
+                          {item.product.name}
+                        </h3>
+                        {item.product.badge && (
+                          <span className="bg-yellow-400 text-black text-[9px] font-bold px-2 py-0.5 uppercase">
+                            {item.product.badge}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-gray-500 text-xs">
+                        {item.product.subtitle}
+                      </p>
+                      <p className="text-[#2dd4c8] text-xs font-bold">
+                        {item.product.price}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Price + Delete */}
-                  <div className="flex flex-col items-end gap-4">
+                  {/* Quantity — col 3 */}
+                  <div className="col-span-8 md:col-span-3 flex items-center justify-start md:justify-center gap-3">
+                    <button
+                      onClick={() => updateQuantity(item.product.id, -1)}
+                      className="w-8 h-8 border border-[#2f2f2f] text-white text-sm hover:border-[#2dd4c8] hover:text-[#2dd4c8] transition-all duration-300 flex items-center justify-center"
+                    >
+                      −
+                    </button>
+                    <span className="text-white text-sm w-4 text-center">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => updateQuantity(item.product.id, 1)}
+                      className="w-8 h-8 border border-[#2f2f2f] text-white text-sm hover:border-[#2dd4c8] hover:text-[#2dd4c8] transition-all duration-300 flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Total + Delete — col 3 */}
+                  <div className="col-span-4 md:col-span-3 flex items-center justify-end gap-4">
+                    <span className="text-[#2dd4c8] font-black text-sm">
+                      Rs.{" "}
+                      {(
+                        parsePrice(item.product.price) * item.quantity
+                      ).toLocaleString()}
+                    </span>
                     <button
                       onClick={() => removeFromCart(item.product.id)}
-                      className="text-gray-500 hover:text-red-400 transition-colors duration-300"
+                      className="text-gray-600 hover:text-red-400 transition-colors duration-300"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -111,77 +146,114 @@ export default function CartPage() {
                         />
                       </svg>
                     </button>
-                    <span className="text-[#2dd4c8] font-bold text-sm">
-                      Rs.{" "}
-                      {(
-                        parsePrice(item.product.price) * item.quantity
-                      ).toLocaleString()}
+                  </div>
+                </motion.div>
+              ))}
+
+              {/* Continue shopping */}
+              <Link href="/store" className="w-fit">
+                <button className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-widest hover:text-[#2dd4c8] transition-colors duration-300 mt-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+                    />
+                  </svg>
+                  Continue Shopping
+                </button>
+              </Link>
+            </div>
+
+            {/* Right — Order Summary */}
+            <div className="flex flex-col gap-4 h-fit sticky top-28">
+              <div className="bg-[#1a1a1a] border border-[#2f2f2f] p-6 flex flex-col gap-5">
+                <h2 className="text-white font-black uppercase tracking-widest text-base border-b border-[#2f2f2f] pb-4">
+                  Order Summary
+                </h2>
+
+                {/* Item breakdown */}
+                <div className="flex flex-col gap-2">
+                  {items.map((item) => (
+                    <div
+                      key={item.product.id}
+                      className="flex justify-between text-xs"
+                    >
+                      <span className="text-gray-400">
+                        {item.product.name} × {item.quantity}
+                      </span>
+                      <span className="text-white">
+                        Rs.{" "}
+                        {(
+                          parsePrice(item.product.price) * item.quantity
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-col gap-3 text-sm border-t border-[#2f2f2f] pt-4">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Subtotal</span>
+                    <span className="text-white">
+                      Rs. {subtotal.toLocaleString()}
                     </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Shipping</span>
+                    <span className="text-[#2dd4c8] text-xs">
+                      Calculated at checkout
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Taxes</span>
+                    <span className="text-white">Rs. 0</span>
+                  </div>
                 </div>
-              ))
-            )}
-          </div>
 
-          {/* Right — Order Summary */}
-          <div className="bg-[#1a1a1a] border border-[#2f2f2f] p-6 h-fit flex flex-col gap-4">
-            <h2 className="text-white font-black uppercase tracking-widest text-base">
-              Order Summary
-            </h2>
+                <div className="border-t border-[#2f2f2f] pt-4 flex justify-between items-center">
+                  <span className="text-white font-bold uppercase tracking-widest text-sm">
+                    Total
+                  </span>
+                  <span className="text-[#2dd4c8] font-black text-2xl">
+                    Rs. {subtotal.toLocaleString()}
+                  </span>
+                </div>
 
-            <div className="flex flex-col gap-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-400">
-                  Subtotal ({items.length} items)
-                </span>
-                <span className="text-white">
-                  Rs. {subtotal.toLocaleString()}
-                </span>
+                <Link href="/checkout">
+                  <button className="w-full bg-[#2dd4c8] text-[#1f1f1f] font-black tracking-widest uppercase text-xs py-4 hover:bg-[#a6f8ea] hover:scale-[1.02] transition-all duration-500 ease-in-out">
+                    Proceed to Checkout →
+                  </button>
+                </Link>
+
+                <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-3 h-3"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+                    />
+                  </svg>
+                  Secure Checkout
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Shipping</span>
-                <span className="text-gray-400">Calculated at checkout</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Taxes</span>
-                <span className="text-white">Rs. 0</span>
-              </div>
-            </div>
-
-            <div className="border-t border-[#2f2f2f] pt-4 flex justify-between items-center">
-              <span className="text-white font-bold uppercase tracking-widest text-sm">
-                Total
-              </span>
-              <span className="text-[#2dd4c8] font-black text-xl">
-                Rs. {subtotal.toLocaleString()}
-              </span>
-            </div>
-
-            <Link href="/checkout">
-              <button className="w-full bg-[#2dd4c8] text-[#1f1f1f] font-bold tracking-widest uppercase text-xs py-4 hover:bg-[#a6f8ea] transition-all duration-300">
-                Proceed to Checkout →
-              </button>
-            </Link>
-
-            <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-3 h-3"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
-                />
-              </svg>
-              Secure Checkout
             </div>
           </div>
-        </div>
+        )}
       </div>
     </main>
   );
